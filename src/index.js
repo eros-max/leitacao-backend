@@ -1,6 +1,9 @@
 import express from "express"
 import cors from "cors"
+import mysql from "mysql2"
 import { people } from "./people.js"
+
+const { DATABASE_HOST, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD } = process.env
 
 const app = express()
 const port = 3333
@@ -16,16 +19,29 @@ app.get("/", (request, response) => {
 app.post("/cadastrar", (request, response) => {
     const { name, email, age, password } = request.body.user
 
-    console.log(`
-        Nome: ${name},
-        Senha: ${password},
-        E-mail: ${email},
-        Idade: ${age}
-    `)
+    const insertCommand = `
+        INSERT INTO erosmax_02mc(name, email, age, password)
+        VALUES (?, ?, ?, ?)
+    `
 
-    response.status(201).json({ message: "Usuário Cadastrado com Sucesso!"})
+    database.query(insertCommand, [name, email, age, password], (error) => {
+        if(error) {
+            console.log(error)
+            return
+        }
+
+        response.status(201).json({ message: "Usuário Cadastrado com Sucesso!"})
+    })
 })
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}!`)
+})
+
+const database = mysql.createPool({
+    database: DATABASE_NAME,
+    host: DATABASE_HOST,
+    user: DATABASE_USER,
+    password: DATABASE_PASSWORD,
+    connectionLimit: 10
 })
