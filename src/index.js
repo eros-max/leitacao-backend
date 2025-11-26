@@ -61,6 +61,12 @@ app.post("/login", (request, response) => {
     })
 })
 
+
+//criar uma rota para o ranking. Parecida com as rotas GET dos users
+
+//criar uma rota POST que recebe o id do usuário e pontuação para guardar no banco de dados
+
+//deixar o servidor online
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}!`)
 })
